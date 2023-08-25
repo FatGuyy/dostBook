@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+"""
+admin - omkar
+pass - 1
+Django's command-line utility for administrative tasks."""
 import os
 import sys
 
