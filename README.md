@@ -1,1 +1,1 @@
-## This is a django based app, basically instagram/facebook clone
+## This is a social media app in django, basically instagram/facebook clone
