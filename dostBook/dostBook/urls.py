@@ -21,13 +21,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls), #preloaded
+    path('admin/', admin.site.urls), # preloaded (The Admin Panel)
     path('', views.index, name="index"),
-    path('home', views.index, name="home"),
-    path('signup', views.signup, name="signUp"),
-    path('signup/', views.signup, name="signUp-redirect"),
-    path('signin', views.signin, name="login"),
-    path('signin/', views.signin, name="login-redirect")
+    path('home/', views.index, name="home"),
+    path('signup/', views.signup, name="signup"),
+    path('signin/', views.signin, name="signin"),
+    path('logout/', views.logoutUser, name="logout"),
+    path('settings/', views.settings, name="settings")
 ]
 
 urlpatterns += static(  settings.MEDIA_URL,

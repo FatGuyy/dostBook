@@ -1,11 +1,12 @@
+from .models import Profile
 from django.contrib import messages
 # from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import Profile
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
-
+@login_required(login_url='/signup/')
 def index(request):
     return render(request, "index.html")
 
@@ -23,19 +24,19 @@ def signup(request):
                 messages.info(request, 'username taken')
                 return redirect('/signup')
             else:
+                # Save user and Profile and redirect to settings page
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
-                # user_model = User.objects.get(username=username)
-                # new_profile = Profile.objects.create(user=user_model, id_user=user_model.id)
-                # new_profile.save()
-                return redirect('login')
+                new_profile = Profile.objects.create(user=user, id_user=user.id)
+                new_profile.save()
+                login(request, user)
+                return redirect('/settings/')
         else:
             messages.info(request, 'Password not matching')
 
         return redirect("/signup")
     else:
         return render(request, "signup.html")
-
 
 def signin(request):
     if request.method == 'POST':
@@ -55,3 +56,12 @@ def signin(request):
     else:
         return render(request, "signin.html")
 
+@login_required(login_url='/signin/')
+def logoutUser(request):
+    logout(request)
+    messages.info(request,"You have been successfully logged out.")
+    return redirect('login')
+
+# @login_required(login_url='/signin/')
+def settings(request):
+    return render(request, 'setting.html')

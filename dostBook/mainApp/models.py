@@ -11,4 +11,4 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return self.user
+        return str(self.user)
