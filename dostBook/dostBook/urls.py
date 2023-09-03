@@ -27,8 +27,11 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('signin/', views.signin, name="signin"),
     path('logout/', views.logoutUser, name="logout"),
-    path('settings/', views.settings, name="settings")
+    path('settings/', views.settings, name="settings"),
+    path('videos/', views.upload_video, name='videoUpload')
 ]
 
-urlpatterns += static(  settings.MEDIA_URL,
-                document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(  settings.MEDIA_URL,
+#                 document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

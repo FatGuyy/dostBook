@@ -1,14 +1,23 @@
 from .models import Profile
+from .forms import Videoform
 from django.contrib import messages
-# from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 @login_required(login_url='/signup/')
 def index(request):
-    return render(request, "index.html")
+    try:
+        user = User.objects.get(username=request.user.username)
+        user_profile = Profile.objects.get(user=user)
+    except Profile.DoesNotExist:
+        user_profile = Profile(user=request.user)
+
+    context = {'user':user_profile}
+
+    return render(request, "index.html", context=context)
 
 def signup(request):
     if request.method == 'POST':
@@ -25,11 +34,13 @@ def signup(request):
                 return redirect('/signup')
             else:
                 # Save user and Profile and redirect to settings page
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.save()
+                user = User.objects.create_user(username=username, email=email, password=password) # type: ignore
+                user.save() # Save user as user
                 new_profile = Profile.objects.create(user=user, id_user=user.id)
-                new_profile.save()
+                new_profile.save() # Save User as profile
+
                 login(request, user)
+                messages.info(request, 'You are not logged in!')
                 return redirect('/settings/')
         else:
             messages.info(request, 'Password not matching')
@@ -38,6 +49,7 @@ def signup(request):
     else:
         return render(request, "signup.html")
 
+@csrf_protect
 def signin(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -60,8 +72,30 @@ def signin(request):
 def logoutUser(request):
     logout(request)
     messages.info(request,"You have been successfully logged out.")
-    return redirect('login')
+    return redirect('signin')
 
-# @login_required(login_url='/signin/')
+@login_required(login_url='/signin/')
 def settings(request):
-    return render(request, 'setting.html')
+    user_profile = Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        # Check if 'image' key exists in request.FILES before accessing it
+        if 'image' in request.FILES:
+            user_profile.profolieImg = request.FILES['image']
+        user_profile.bio = request.POST['bio']
+        user_profile.location = request.POST['location']
+        user_profile.save()
+
+    context = {
+    'user_profile': user_profile,
+    }
+    return render(request, 'setting.html', context=context)
+
+def upload_video(request):
+    if request.method == 'POST':
+        form = Videoform(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Got the video')
+    else:
+        form = Videoform()
+    return render(request, 'upload_form.html', {'form': form})
