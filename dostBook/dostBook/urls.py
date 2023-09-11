@@ -28,7 +28,8 @@ urlpatterns = [
     path('signin/', views.signin, name="signin"),
     path('logout/', views.logoutUser, name="logout"),
     path('settings/', views.settings, name="settings"),
-    path('videos/', views.upload_video, name='videoUpload')
+    path('videos/', views.upload_video, name='videoUpload'),
+    path('home/upload', views.post, name='post')
 ]
 
 # urlpatterns += static(  settings.MEDIA_URL,

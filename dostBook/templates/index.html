@@ -71,7 +71,7 @@
                                         </svg>
                                     </div>
 
-                                    <form action="upload" method="POST" enctype="multipart/form-data" >
+                                    <form action="{% url 'post' %}" method="POST" enctype="multipart/form-data" >
                                     {% csrf_token %}
                                     <p class="my-3 leading-6"> Upload pics
                                     </p>
@@ -172,7 +172,7 @@
                         <!-- profile -->
 
                         <a href="#">
-                            <img src="{{ user_profile.profolieImg.url }}" class="header-avatar" alt="">
+                            <img src="{{ user_profile.proflieImg.url }}" class="header-avatar" alt="">
                         </a>
                         <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
                             <ul>

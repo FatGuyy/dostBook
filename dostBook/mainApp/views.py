@@ -1,5 +1,5 @@
-from .models import Profile
 from .forms import Videoform
+from .models import Profile, Post
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -15,7 +15,7 @@ def index(request):
     except Profile.DoesNotExist:
         user_profile = Profile(user=request.user)
 
-    context = {'user':user_profile}
+    context = {'user_profile':user_profile}
 
     return render(request, "index.html", context=context)
 
@@ -36,7 +36,7 @@ def signup(request):
                 # Save user and Profile and redirect to settings page
                 user = User.objects.create_user(username=username, email=email, password=password) # type: ignore
                 user.save() # Save user as user
-                new_profile = Profile.objects.create(user=user, id_user=user.id)
+                new_profile = Profile.objects.create(user=user, id_user=user.id) # type: ignore
                 new_profile.save() # Save User as profile
 
                 login(request, user)
@@ -80,7 +80,7 @@ def settings(request):
     if request.method == 'POST':
         # Check if 'image' key exists in request.FILES before accessing it
         if 'image' in request.FILES:
-            user_profile.profolieImg = request.FILES['image']
+            user_profile.proflieImg = request.FILES['image']
         user_profile.bio = request.POST['bio']
         user_profile.location = request.POST['location']
         user_profile.save()
@@ -99,3 +99,22 @@ def upload_video(request):
     else:
         form = Videoform()
     return render(request, 'upload_form.html', {'form': form})
+
+@login_required(login_url='/signin/') # type: ignore
+def post(request):
+    correct_user = Post.objects.filter(uploader='rtsfg')
+    print(correct_user)
+    if request.method == 'POST':
+        if 'image_upload' in request.FILES:
+            print("image_upload present", request.FILES['image_upload'])
+        if 'image_upload' in request.FILES:
+            caption = request.POST['caption']
+            new_post = Post.objects.create(image=request.FILES['image_upload'], captions=caption, user=request.user)
+            new_post.save()
+            print('HEll yeah, saving')
+            return redirect('/home')
+        else:
+            print('LOL- FUCK YOU!!!')
+    else:
+        print("biatch!!! ")
+        return redirect('/home/')
