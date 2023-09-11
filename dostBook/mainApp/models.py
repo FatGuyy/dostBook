@@ -48,8 +48,10 @@ class Post(models.Model):
     date_of_upload = models.TimeField(default=datetime.now) # type: ignore
 
     def __str__(self) -> str:
-        return str(self.user)
+        return str(self.id)
     
-    def likePost(self):
+    def likePost(self) -> None:
         self.no_of_likes += 1
-        
+    
+    def get_likes(self) -> int:
+        return self.no_of_likes

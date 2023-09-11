@@ -15,7 +15,8 @@ def index(request):
     except Profile.DoesNotExist:
         user_profile = Profile(user=request.user)
 
-    context = {'user_profile':user_profile}
+    posts = Post.objects.all()
+    context = {'user_profile':user_profile, 'posts':posts}
 
     return render(request, "index.html", context=context)
 
@@ -107,10 +108,19 @@ def post(request):
             caption = request.POST['caption']
             new_post = Post.objects.create(image=request.FILES['image_upload'], captions=caption, user=request.user)
             new_post.save()
-            print('HEll yeah, saving')
+            # print('HEll yeah, saving')
             return redirect('/home')
         else:
-            print('LOL- FUCK YOU!!!')
+            pass
+            # print('LOL- FUCK YOU!!!')
     else:
-        print("biatch!!! ")
+        # print("biatch!!! ")
         return redirect('/home/')
+
+@login_required(login_url='/signin/') # type: ignore
+def like_post(request):
+    post = Post.objects.get(id=request.GET.get('post_id'))
+    post.likePost()
+    # print("no of likes = ", post.get_likes())    
+
+    return redirect('home')

@@ -30,10 +30,9 @@ urlpatterns = [
     path('home/logout/', views.logoutUser, name="logout-home"),
     path('settings/', views.settings, name="settings"),
     path('videos/', views.upload_video, name='videoUpload'),
-    path('home/upload', views.post, name='post')
+    path('home/upload', views.post, name='post'),
+    path('like-post/', views.like_post, name='like_post')
 ]
 
-# urlpatterns += static(  settings.MEDIA_URL,
-#                 document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
