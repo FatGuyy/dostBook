@@ -41,7 +41,7 @@ class VideoUpload(models.Model):
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default= uuid.uuid4)
-    user = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     captions = models.TextField(max_length=200)
     image = models.ImageField(upload_to='post_images/')
     no_of_likes = models.IntegerField(default=0)

@@ -102,11 +102,7 @@ def upload_video(request):
 
 @login_required(login_url='/signin/') # type: ignore
 def post(request):
-    correct_user = Post.objects.filter(uploader='rtsfg')
-    print(correct_user)
     if request.method == 'POST':
-        if 'image_upload' in request.FILES:
-            print("image_upload present", request.FILES['image_upload'])
         if 'image_upload' in request.FILES:
             caption = request.POST['caption']
             new_post = Post.objects.create(image=request.FILES['image_upload'], captions=caption, user=request.user)

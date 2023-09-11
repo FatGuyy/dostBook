@@ -27,6 +27,7 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('signin/', views.signin, name="signin"),
     path('logout/', views.logoutUser, name="logout"),
+    path('home/logout/', views.logoutUser, name="logout-home"),
     path('settings/', views.settings, name="settings"),
     path('videos/', views.upload_video, name='videoUpload'),
     path('home/upload', views.post, name='post')
